@@ -44,3 +44,8 @@ next-env.d.ts
 backend/node_modules/
 backend/dist/
 backend/.env
+
+
+backend/src/node_modules/
+backend/src/dist/
+backend/src/.env
