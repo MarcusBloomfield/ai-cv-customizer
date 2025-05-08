@@ -1,0 +1,61 @@
+- Project exploration started. 
+- Project is a Next.js 15 application.
+- Uses React 19, TypeScript, and Tailwind CSS.
+- Project name is "ai-cv-customizer".
+- Key files:
+    - `src/app/page.tsx`: Main landing page.
+    - `src/app/layout.tsx`: Root layout for pages.
+    - `package.json`: Defines scripts and dependencies.
+- Standard Next.js scripts are available: `dev`, `build`, `start`, `lint`.
+- The `dev` script uses Turbopack.
+- The project structure follows the Next.js App Router conventions.
+- Project aims to be an AI-powered resume and cover letter customizer.
+- It will use the OpenAI API.
+- Core functionality: 
+    - Input: User's current resume and a job description.
+    - Output: A new resume and a cover letter tailored for the specific job.
+- A backend will be required to handle OpenAI API calls and processing.
+- Input method for resume and job description: Pasting text.
+- Implemented OpenAI API calls in the backend route `/api/customize`:
+    - Initializes OpenAI client using `OPENAI_API_KEY` from `.env.local`.
+    - Constructs prompts for resume tailoring and cover letter generation.
+    - Calls OpenAI API (`gpt-4o`) for both tasks, aiming for the highest available text quality.
+    - Includes error handling for API issues.
+- Restructured project to have a separate backend server:
+    - Created `backend/` directory with its own Node.js (Express.js, TypeScript) project.
+    - Backend server runs on `http://localhost:3001` (configurable via `BACKEND_PORT` in `backend/.env`).
+    - OpenAI API logic moved to `backend/src/server.ts` (`/api/customize` route).
+    - `OPENAI_API_KEY` is now managed in `backend/.env`.
+    - Frontend (`src/app/page.tsx`) updated to call `http://localhost:3001/api/customize` (configurable via `NEXT_PUBLIC_BACKEND_URL` in root `.env.local`).
+    - Old Next.js API route (`src/app/api/customize/route.ts`) removed.
+- Refined the OpenAI system prompt for resume generation to explicitly request a full, formatted resume document, incorporating all sections from the original and using placeholders for missing standard details.
+- Added "Copy to Clipboard" buttons for both tailored resume and cover letter on the frontend (`src/app/page.tsx`).
+    - Buttons use `navigator.clipboard.writeText()`.
+    - Provide visual feedback (button text changes) on copy success/failure.
+- Renamed .txt download buttons and added new .pdf download buttons (with placeholder functionality) for resume and cover letter.
+    - Downloads content as `.txt` files.
+    - Uses Blob and Object URL for client-side file generation.
+- Replaced text on copy buttons with SVG icons, while retaining text feedback for 'Copied!' or 'Copy Failed' states.
+- Replaced text on download buttons with SVG icons and small text labels (TXT/PDF) for file type.
+- Removed Next.js logo from the header on the frontend.
+- Removed Next.js links from the footer on the frontend; added a simple copyright notice as a placeholder.
+- Implemented PDF download functionality using the `jsPDF` library.
+    - Text content is added to the PDF with basic formatting (font, font size, text wrapping).
+    - `handleDownloadPdf` function in frontend updated.
+    - Attempted basic Markdown parsing in `handleDownloadPdf` for `---` (horizontal lines) and `**bold**` text to improve PDF formatting.
+- Made the output areas for tailored resume and cover letter editable by changing them from `div`s to `textarea`s, bound to component state.
+- Increased the minimum height of the output textareas for tailored resume and cover letter to `min-h-[1000px]` for more viewing/editing space.
+- Refactored page layout for a modern full-width header and footer design:
+    - Changed main layout to flexbox (`flex flex-col`).
+    - Styled header and footer as full-width bars with distinct backgrounds, shadows/borders, and centered content.
+    - Adjusted main content area to be centered with a max-width and appropriate padding.
+    - Updated text sizes and spacing in the header for better visual hierarchy.
+    - Made icon buttons more compact.
+- Significantly enhanced the OpenAI system prompt for resume generation, providing detailed instructions for creating a professional and comprehensive header/contact information section, including content, formatting guidelines, and robust placeholder usage.
+- Added pre-processing for `.txt` downloads to convert simple Markdown:
+    - `---` replaced with a line of dashes.
+    - `**text**` (bold) converted to plain `text`.
+- Updated `.gitignore` to include rules for the separate backend directory:
+    - Added `backend/node_modules/`
+    - Added `backend/dist/`
+    - Added `backend/.env` for explicit ignore. 
